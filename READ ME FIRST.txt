@@ -1,0 +1,17 @@
+============ Admin ============
+localhost/*foldername*/Admin
+
+============ Auth ============
+localhost/*foldername*/Auth => Login
+localhost/*foldername*/Auth/register => Register
+
+============ User / Front ============
+localhost/*foldername*/
+
+
+
+**************************************************
+**************************************************
+
+Semua mengikuti Routesnya 
+jadi yang ngatur perpindahan lewat Routes dari config

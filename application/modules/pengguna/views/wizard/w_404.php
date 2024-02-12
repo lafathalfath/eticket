@@ -1,0 +1,1 @@
+<div class='alert alert-danger text-center mt-4 p-4'>Oopss sementara <?= $wizard ?> ini tidak tersedia.</div>

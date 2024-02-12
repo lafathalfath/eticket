@@ -1,0 +1,5 @@
+error.log
+request.log
+application/config/database.php
+application/sessions/
+uploads/
