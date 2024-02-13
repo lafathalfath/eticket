@@ -32,7 +32,7 @@
                         <label for="filter">Filter</label>
                         <select class="form-control" name="filter" id="filter">
                             <option value="2">Ticket Dikerjakan</option>
-                            <option value="3">Ticket Selesai</option>
+                            <option value="4">Ticket Selesai</option>
                         </select>
                     </div>
                 </div>

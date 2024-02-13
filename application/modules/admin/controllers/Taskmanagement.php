@@ -279,7 +279,7 @@ class Taskmanagement extends MX_Controller
             (SELECT COUNT(tr.personil_id)
                 FROM tr_ticket tr
                 INNER JOIN ticket t ON tr.ticket_id = t.id
-                WHERE p.id = tr.personil_id AND t.status_id = 3
+                WHERE p.id = tr.personil_id AND t.status_id = 4
             ) as workload_finish
             ')
             ->from('personil p')

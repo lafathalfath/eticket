@@ -928,6 +928,7 @@ class Form extends MX_Controller
                 'id' => $idTicket,
                 'created_at' => date('Y-m-d H:i:s'),
                 'title' => 'Pengajuan Penempatan Storage Mandiri',
+				'description' => $keterangan,
                 'pegawai_id' => $this->session->id,
                 'status_id' => '1'
             ];
@@ -1033,7 +1034,7 @@ class Form extends MX_Controller
                 'nama_barang' => $nama_barang,
                 'merk_produk' => $merk_produk,
                 'nomor_seri' => $nomor_seri,
-                'keterangan' => $keterangan,
+                'keterangan' => $keterangan ,
                 'ticket_id' => $idTicket
             ];
 
@@ -1041,6 +1042,7 @@ class Form extends MX_Controller
                 'id' => $idTicket,
                 'created_at' => date('Y-m-d H:i:s'),
                 'title' => 'Pengajuan Aset',
+				'description' => $keterangan,
                 'pegawai_id' => $this->session->id,
                 'status_id' => '1'
             ];
@@ -1149,6 +1151,7 @@ class Form extends MX_Controller
                 'id' => $idTicket,
                 'created_at' => date('Y-m-d H:i:s'),
                 'title' => 'Inseiden Keamanan Informasi',
+				'description' => $keterangan,
                 'pegawai_id' => $this->session->id,
                 'status_id' => '1'
             ];
