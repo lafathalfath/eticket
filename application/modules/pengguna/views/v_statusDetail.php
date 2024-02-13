@@ -1,3 +1,8 @@
+<style>
+    .chat-input:focus{
+        outline: none;
+    }
+</style>
 <main id="main">
     <!-- ======= Status Ticket ======= -->
     <section id="status-section" class="status-section">
@@ -83,6 +88,34 @@
                                 </div>                                
                             </div>
                             <?php endif; ?>
+
+                            <div class="w-100 p-1 bg-dark position-relative" style="height: 75vh;">
+                                <div class="">
+                                    <?php foreach($ticketChat as $ticketChat) : ?>
+                                        <div class="m-0 px-2 py-1 d-flex flex-row align-items-center 
+                                            <?php if ($ticketChat['pegawai_id'] == $this->session->id) echo 'justify-content-end'; else echo 'justify-content-start'; ?>
+                                        ">
+                                            <p class="px-2 py-1 w-fit" style="
+                                                <?php if ($ticketChat['pegawai_id'] == $this->session->id) echo 'border-radius: 10px 10px 0 10px; background-color: white'; else echo 'border-radius: 10px 10px 10px 0; background-color: #17A2B8; color: white'; ?>
+                                            "><?= $ticketChat['pesan']?></p>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <div class="w-100 p-2 bg-dark" style="position: absolute; bottom: 0; left:0;">
+                                    <?php if($statusTicket['status_id']!=4):?>
+                                        <form class="w-100 h-max rounded-lg bg-white d-flex flex-row align-items-center justify-content-center">
+                                            <input type="text" name="pesan" class="chat-input px-1 w-100 h-100 rounded-lg" style="border: none" placeholder="Tulis pesan ...">
+                                            <button type="submit" class="m-1 btn px-3 py-1 bg-info text-light">send</button>
+                                        </form>
+                                    <?php else: ?>
+                                        <div class="p-3 w-100 rounded-lg bg-success text-white d-flex align-items-center justify-content-center" style="font-size: 18px; cursor: not-allowed;">
+                                            Tiket telah ditutup
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <!-- <?php var_export($ticketChat) ?> -->
+
                         </div>
                     </div>
                 </div>

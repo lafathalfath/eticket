@@ -87,4 +87,8 @@ $(document).ready(function () {
 			}
 		})
 	})
+
+	const sendChat=()=>{
+		
+	}
 });

@@ -113,6 +113,13 @@ class Status extends MX_Controller
             ->get();
 
             // print_r($dataResponse->row_array()); die;
+            
+        $ticketChat = $this->db
+            ->get_where('ticket_chat', ['ticket_id'=>$ticketId]);
+        // var_export($ticketChat->result_array()); 
+        // var_export($$ticketId); 
+        // die;
+        // print_r($ticketId); die;
 
         $data = [
             'main_content' => 'v_statusDetail',
@@ -124,7 +131,8 @@ class Status extends MX_Controller
             'statusTicket' => $statusTicket->row_array(),
             'dataTicket' => $dataTicket->row_array(),
             'dataResponse' => $dataResponse->row_array(),
-            'dataAttachment' => $dataAttachment->result_array()
+            'dataAttachment' => $dataAttachment->result_array(),
+            'ticketChat' => $ticketChat->result_array(),
         ];
 
         if ($ticketId != '') {
@@ -233,5 +241,12 @@ class Status extends MX_Controller
             ->set_content_type('application/json')
             ->set_status_header(200)
             ->set_output(json_encode($result));
+    }
+
+    function storeTicketChat() {
+        // $request = $this->input;
+        // var_export($request->row_array());
+        var_export('lkmxlcm');
+        die;
     }
 }
