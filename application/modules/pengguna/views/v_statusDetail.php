@@ -103,10 +103,10 @@
                                 </div>
                                 <div class="w-100 p-2 bg-dark" style="position: absolute; bottom: 0; left:0;">
                                     <?php if($statusTicket['status_id']!=4):?>
-                                        <div class="w-100 h-max rounded-lg bg-white d-flex flex-row align-items-center justify-content-center">
-                                            <input type="text" class="chat-input px-1 w-100 h-100 rounded-lg" style="border: none" placeholder="Tulis pesan ...">
-                                            <button class="m-1 btn px-3 py-1 bg-info text-light">send</button>
-                                        </div>
+                                        <form class="w-100 h-max rounded-lg bg-white d-flex flex-row align-items-center justify-content-center">
+                                            <input type="text" name="pesan" class="chat-input px-1 w-100 h-100 rounded-lg" style="border: none" placeholder="Tulis pesan ...">
+                                            <button type="submit" class="m-1 btn px-3 py-1 bg-info text-light">send</button>
+                                        </form>
                                     <?php else: ?>
                                         <div class="p-3 w-100 rounded-lg bg-success text-white d-flex align-items-center justify-content-center" style="font-size: 18px; cursor: not-allowed;">
                                             Tiket telah ditutup

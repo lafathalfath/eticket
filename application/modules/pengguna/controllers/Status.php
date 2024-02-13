@@ -242,4 +242,11 @@ class Status extends MX_Controller
             ->set_status_header(200)
             ->set_output(json_encode($result));
     }
+
+    function storeTicketChat() {
+        // $request = $this->input;
+        // var_export($request->row_array());
+        var_export('lkmxlcm');
+        die;
+    }
 }
