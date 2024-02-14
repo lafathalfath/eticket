@@ -74,7 +74,6 @@ class Status extends MX_Controller
         t.title, (CASE WHEN tl.jenis_layanan_id IS NULL THEN 'Permintaan' ELSE 'Lapor' END) as jenisTicket
         ")
         ->from('ticket t')
-        // ->join('tr_ticket tt', 't.id = tt.ticket_id')
         ->join('tr_layanan tl', 't.id = tl.ticket_id')
         ->where('t.id', $ticketId)
         ->where('t.pegawai_id', $this->session->id)->get();
@@ -111,15 +110,8 @@ class Status extends MX_Controller
             ->join('m_status s', 't.status_id = s.id')
             ->where('t.id', $ticketId)
             ->get();
-
-            // print_r($dataResponse->row_array()); die;
             
-        $ticketChat = $this->db
-            ->get_where('ticket_chat', ['ticket_id'=>$ticketId]);
-        // var_export($ticketChat->result_array()); 
-        // var_export($$ticketId); 
-        // die;
-        // print_r($ticketId); die;
+        $ticketChat = $this->db->get_where('ticket_chat', ['ticket_id'=>$ticketId]);
 
         $data = [
             'main_content' => 'v_statusDetail',
@@ -134,6 +126,9 @@ class Status extends MX_Controller
             'dataAttachment' => $dataAttachment->result_array(),
             'ticketChat' => $ticketChat->result_array(),
         ];
+
+        // var_export($data['sapa']);
+        // die;
 
         if ($ticketId != '') {
             if($checkTicket->num_rows() > 0) {
@@ -244,9 +239,37 @@ class Status extends MX_Controller
     }
 
     function storeTicketChat() {
-        // $request = $this->input;
-        // var_export($request->row_array());
-        var_export('lkmxlcm');
-        die;
+        if (!$this->input->is_ajax_request()) show_404();
+        // $val = $this->form_validation;
+        // $rules = [
+        //     'field' => 'masalah',
+        //     'label' => 'Deskripsi Masalah',
+        //     'rules' => 'trim|required'
+        // ];
+        // $this->function->alert($val);
+        // $val->set_rules($rules);
+        // var_export($val->run());
+        $data = [
+            'role_id' => intval($this->session->userdata['role_id']),
+            'ticket_id' => $this->input->post('ticket_id'),
+            'pegawai_id' => intval($this->session->userdata['id']),
+            'pesan' => trim($this->input->post('pesan')),
+            'tanggal' => date('Y-m-d H:i:s'),
+        ];
+        if ($data['pesan'] == null || $data['pesan'] == '') {
+            var_export('Tidak Ada Pesan!');
+        }elseif ($data['role_id']==null||$data['ticket_id']==null||$data['pegawai_id']==null||$data['tanggal']==null) {
+            var_export('Terjadi Kesalahan!');
+        }else{
+            $this->mdl->save('ticket_chat', $data);
+        }
+        // die;
+        // $ticket_chat_id = $this->mdl->save('ticket_chat', $data);
+        // var_export($ticket_chat_id);
+        // if($ticket_chat_id){
+        //     echo "sukses";
+        // }else{
+        //     echo "gagal";
+        // }
     }
 }
