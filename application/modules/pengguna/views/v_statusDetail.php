@@ -2,6 +2,20 @@
     .chat-input:focus{
         outline: none;
     }
+    #chat-box::-webkit-scrollbar{
+        width: 7px;
+    }
+    #chat-box::-webkit-scrollbar-track{
+        box-shadow: inset 0 0 5px grey; 
+        border-radius: 10px;
+    }
+    #chat-box::-webkit-scrollbar-thumb{
+        background-color: gray; 
+        border-radius: 10px;
+    }
+    #chat-box::-webkit-scrollbar-thumb:hover{
+        background-color: white;
+    }
 </style>
 <main id="main">
     <!-- ======= Status Ticket ======= -->
@@ -85,36 +99,39 @@
                                         </div>
                                         <?php endif; ?>
                                     </div>
-                                </div>                                
+                                </div>   
+                                
+
+                                <!-- chat -->
+                                <div class="w-100 p-1 bg-dark rounded-lg">
+                                    <div class="bg-dark" id="chat-box" style="max-height: 25vh; overflow-x: hidden; overflow-y: scroll;">
+                                        <?php foreach($ticketChat as $ticketChat) : ?>
+                                            <div class="m-0 px-2 py-1 d-flex flex-row align-items-center 
+                                                <?php if ($ticketChat['pegawai_id'] == $this->session->id) echo 'justify-content-end'; else echo 'justify-content-start'; ?>
+                                            ">
+                                                <p class="px-2 py-1 w-fit" style="
+                                                    <?php if ($ticketChat['pegawai_id'] == $this->session->id) echo 'border-radius: 10px 10px 0 10px; background-color: white'; else echo 'border-radius: 10px 10px 10px 0; background-color: #17A2B8; color: white'; ?>
+                                                "><?= $ticketChat['pesan']?></p>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <div class="w-100 p-2 bg-dark rounded-lg">
+                                        <?php if($statusTicket['status_id']!=4):?>
+                                            <form class="w-100 h-max rounded-lg bg-white d-flex flex-row align-items-center justify-content-center" method="post" id="chat-form">
+                                                <input id="ticket-id" type="text" class="d-none" name="ticket_id" value="<?= $dataTicket['ticket'] ?>">
+                                                <input id="chat-pesan" type="text" name="pesan" class="chat-input px-1 w-100 h-100 rounded-lg" style="border: none" placeholder="Tulis pesan ...">
+                                                <button type="submit" class="m-1 btn px-3 py-1 bg-info text-light">send</button>
+                                            </form>
+                                        <?php else: ?>
+                                            <div class="p-3 w-100 rounded-lg bg-success text-white d-flex align-items-center justify-content-center" style="font-size: 18px; cursor: not-allowed;">
+                                                Tiket telah ditutup
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                <!-- end chat -->
                             </div>
                             <?php endif; ?>
-
-                            <div class="w-100 p-1 bg-dark position-relative" style="height: 75vh;">
-                                <div class="">
-                                    <?php foreach($ticketChat as $ticketChat) : ?>
-                                        <div class="m-0 px-2 py-1 d-flex flex-row align-items-center 
-                                            <?php if ($ticketChat['pegawai_id'] == $this->session->id) echo 'justify-content-end'; else echo 'justify-content-start'; ?>
-                                        ">
-                                            <p class="px-2 py-1 w-fit" style="
-                                                <?php if ($ticketChat['pegawai_id'] == $this->session->id) echo 'border-radius: 10px 10px 0 10px; background-color: white'; else echo 'border-radius: 10px 10px 10px 0; background-color: #17A2B8; color: white'; ?>
-                                            "><?= $ticketChat['pesan']?></p>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                                <div class="w-100 p-2 bg-dark" style="position: absolute; bottom: 0; left:0;">
-                                    <?php if($statusTicket['status_id']!=4):?>
-                                        <form class="w-100 h-max rounded-lg bg-white d-flex flex-row align-items-center justify-content-center">
-                                            <input type="text" name="pesan" class="chat-input px-1 w-100 h-100 rounded-lg" style="border: none" placeholder="Tulis pesan ...">
-                                            <button type="submit" class="m-1 btn px-3 py-1 bg-info text-light">send</button>
-                                        </form>
-                                    <?php else: ?>
-                                        <div class="p-3 w-100 rounded-lg bg-success text-white d-flex align-items-center justify-content-center" style="font-size: 18px; cursor: not-allowed;">
-                                            Tiket telah ditutup
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            <!-- <?php var_export($ticketChat) ?> -->
 
                         </div>
                     </div>
@@ -125,7 +142,7 @@
 </main>
 
 <div class="overlay-bsn"></div>
-
+<!-- <script src="../../../../assets/user_template/js/app/statusDetail.js"></script> -->
 <script>
     // Set BG full cover on body elem
     document.body.style.background = "url('/../assets/user_template/img/bg.png')";
