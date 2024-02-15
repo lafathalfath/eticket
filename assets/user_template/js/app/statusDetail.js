@@ -92,7 +92,8 @@ $(document).ready(function () {
 		e.preventDefault()
 		const data = {
 			pesan: $('#chat-pesan').val(),
-			ticket_id: $('#ticket-id').val()
+			ticket_id: $('#ticket-id').val(),
+			status_ticket: $('#status-ticket').val()
 		}
 		$.ajax({
 			type: 'POST',

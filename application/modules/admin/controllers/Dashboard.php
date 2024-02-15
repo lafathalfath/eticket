@@ -23,7 +23,5 @@ class Dashboard extends MX_Controller
 
         // Get Back Template
         $this->load->view('back_template/template', $data);
-
-        var_export($this->session->id);
     }
 }
