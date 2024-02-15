@@ -40,7 +40,7 @@ class Status extends MX_Controller
         $detail_button      = ($detail_priv == 1) ? '<a href="javascript:void(0)" data-id="$1" class="btn btn-success btn-sm detail"><i class="fas fa-info-circle"></i> Lihat</a>' : '';
         
         $this->datatables
-            ->select('t.id as kode, (CASE WHEN tl.jenis_layanan_id IS NULL THEN "Permintaan" ELSE "Lapor" END) as jenisTicket, CONCAT("#", t.id) as kodeTicket, t.title as judul, t.created_at as tgl, s.status, s.keterangan')
+            ->select('t.id as kode, (CASE WHEN tl.jenis_layanan_id IS NULL THEN "Permintaan" ELSE "Lapor" END) as jenisTicket, CONCAT("#", t.id) as kodeTicket, t.title as judul, t.created_at as tgl, t.lama_pengerjaan as lama_pengerjaan, s.status, s.keterangan')
             ->from('ticket t')
             ->join('m_status s', 't.status_id = s.id')
             ->join('tr_layanan tl', 't.id = tl.ticket_id', 'left')            
@@ -144,50 +144,58 @@ class Status extends MX_Controller
         $this->load->view('user_template/template', $data);
     }
 
-    function closed()
-    {
-        $table = 'ticket';
-
-        $id = $this->input->post('ticketId');        
-        
-        $check = $this->mdl->getWhere($table, ['id' => $id]);
-
-        $this->db->trans_begin();
-
-        $data = [
-            'status_id' => 4,
-        ];
-
-        if ($check->num_rows() > 0) :
-            // $data['mtime'] = date('Y-m-d H:i:s');
-            $this->mdl->update($table, $data, ['id' => $id]);
-            $result = [
-                'success'   => true,
-                'message'   => 'Ticket berhasil ditutup, terimakasih telah menggunakan layanan eTicketing'
-            ];
-        else :
-            // $this->mdl->save($table, $data);
-
-            $result = [
-                'success'   => true,
-                'message'   => 'Ticket berhasil ditutup, terimakasih telah menggunakan layanan eTicketing'
-            ];
-
-        endif;
-
-        if ($this->db->trans_status() === FALSE) :
-            $this->db->trans_rollback();
-            $result['console_message'] = 'Data gagal disimpan [Rollback DB]';
-        else :
-            $this->db->trans_commit();
-            $result['console_message'] = 'Data berhasil disimpan [Commit DB]';
-        endif;
-
-        return $this->output
-            ->set_content_type('application/json')
-            ->set_status_header(200)
-            ->set_output(json_encode($result));
-    }
+    function closed() {
+		$table = 'ticket';
+		$id = $this->input->post('ticketId');
+		
+		$check = $this->mdl->getWhere($table, ['id' => $id]);
+	
+		$this->db->trans_begin();
+	
+		$data = [
+			'lama_pengerjaan' => 0, // Default value
+			'status_id' => 4
+		];
+	
+		if ($check->num_rows() > 0) {
+			$ticket = $check->row();
+			$awal = strtotime($ticket->created_at);
+			$akhir = strtotime($ticket->modified_at);
+			$lama_pengerjaan_detik = $akhir - $awal;
+			$jam = floor($lama_pengerjaan_detik / 3600);
+			$menit = floor(($lama_pengerjaan_detik % 3600) / 60);
+			$detik = $lama_pengerjaan_detik % 60;
+			$lama_pengerjaan = sprintf("%02d:%02d:%02d", $jam, $menit, $detik);
+			$data['lama_pengerjaan'] = $lama_pengerjaan;
+		}
+	
+		$result = [
+			'success' => false,
+			'message' => 'Gagal menutup tiket.'
+		];
+	
+		if ($this->mdl->update($table, $data, ['id' => $id])) {
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+				$result['console_message'] = 'Data gagal disimpan [Rollback DB]';
+			} else {
+				$this->db->trans_commit();
+				$result['success'] = true;
+				$result['message'] = 'Tiket berhasil ditutup.';
+	
+				if ($check->num_rows() == 0) {
+					$result['message'] .= ' Tiket baru telah dibuat.';
+				}
+	
+				$result['console_message'] = 'Data berhasil disimpan [Commit DB]';
+			}
+		}
+	
+		return $this->output
+			->set_content_type('application/json')
+			->set_status_header(200)
+			->set_output(json_encode($result));
+	}
 
     function ongoing()
     {
