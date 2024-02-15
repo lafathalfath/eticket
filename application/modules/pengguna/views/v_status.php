@@ -15,6 +15,7 @@
                             <th>Jenis Ticket</th>
                             <th>Status</th>
                             <th>Tgl. Permohonan</th>
+							<th>Lama Pengerjaan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>

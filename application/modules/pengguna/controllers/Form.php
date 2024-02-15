@@ -544,7 +544,7 @@ class Form extends MX_Controller
             $dataTicket = [
                 'id' => $idTicket,
                 'created_at' => date('Y-m-d H:i:s'),
-                'title' => 'Request Data',
+                'title' => 'Request Data & Informasi',
                 'pegawai_id' => $this->session->id,
                 'status_id' => '1'
             ];
