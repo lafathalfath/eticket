@@ -166,19 +166,13 @@ class Status extends MX_Controller
 	
 		$data = [
 			'lama_pengerjaan' => 0, // Default value
-			'status_id' => 4
+			'status_id' => 4,
+            'modified_at' => date('Y-m-d H:i:s'),
 		];
 	
 		if ($check->num_rows() > 0) {
 			$ticket = $check->row();
-			$awal = strtotime($ticket->created_at);
-			$akhir = strtotime($ticket->modified_at);
-			$lama_pengerjaan_detik = $akhir - $awal;
-			$jam = floor($lama_pengerjaan_detik / 3600);
-			$menit = floor(($lama_pengerjaan_detik % 3600) / 60);
-			$detik = $lama_pengerjaan_detik % 60;
-			$lama_pengerjaan = sprintf("%02d:%02d:%02d", $jam, $menit, $detik);
-			$data['lama_pengerjaan'] = $lama_pengerjaan;
+			$data['lama_pengerjaan'] = selisihWaktu($ticket->created_at, date('Y-m-d H:i:s'))['totalSelisih'];
 		}
 	
 		$result = [
