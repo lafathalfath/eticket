@@ -87,4 +87,25 @@ $(document).ready(function () {
 			}
 		});
 	});
+
+	$('#chat-form').on('submit', e => {
+		e.preventDefault()
+		const data = {
+			pesan: $('#chat-pesan').val(),
+			ticket_id: $('#ticket-id').val()
+		}
+		$.ajax({
+			type: 'POST',
+			url: base_url('/pengguna/status/storeTicketChat'),
+			data: data,
+			success: res => {
+				console.log(res)
+				location.reload()
+			},
+			error: err => {
+				console.error(err)
+			}
+		})
+	})
+	$('#chat-box').scrollTop($('#chat-box').scrollHeight)
 });
