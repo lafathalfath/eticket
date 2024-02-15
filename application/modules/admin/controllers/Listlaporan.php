@@ -101,6 +101,9 @@ class Listlaporan extends MX_Controller
     {
 
     	$trTicketId = decode($this->input->get('ticketId'));
+		$ticketId = $this->db
+			->get_where('tr_ticket', ['id' => $trTicketId])
+			->row_array()['ticket_id'];
 
     	$personil = $this->db->get_where('personil',['id'=>$this->session->id])->row_array();
 		$trTicket = $this->mdl->find($trTicketId);
@@ -171,13 +174,26 @@ class Listlaporan extends MX_Controller
 			endif;
 		endif;
 
+		$ticketChat = $this->db
+			->select('*')
+			->from('ticket_chat')
+			->where('ticket_id', $ticketId)
+			->get()
+			->result_array();
+		$ticketStatus = $this->db
+			->get_where('ticket', ['id' => $ticketId])
+			->row_array()['status_id'];
+
         // Content ( Folder => Files)
         $data = [
             'main_content' => 'listlaporan/ketikjawaban',
             'personil'=> $personil,
 			'trTicket' => $trTicket,
 			'ticketAttachment' => $this->db->get_where('tr_ticket_attachment', ['ticket_id' => $trTicket->ticket_id])->result(),
-			'trJawaban' => $this->mdl->findAnswer($trTicketId)
+			'trJawaban' => $this->mdl->findAnswer($trTicketId),
+			'ticketId' => $ticketId,
+			'ticketChat' => $ticketChat,
+			'ticketStatus' => $ticketStatus,
 		];
 		
         // Get Back Template

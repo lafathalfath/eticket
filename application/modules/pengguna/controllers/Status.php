@@ -10,15 +10,30 @@ class Status extends MX_Controller
         $this->functions->check_session_pegawai();
         $this->load->library('datatables');
         date_default_timezone_set("Asia/Jakarta");
-    }
 
+        function selisihWaktu($mulai, $akhir) {
+            $interval = strtotime($akhir) - strtotime($mulai);
+            $jam = floor($interval / 3600);
+            $menit = floor(($interval % 3600) / 60);
+            $detik = $interval % 60;
+            $totalInterval = sprintf('%02d:%02d:%02d', $jam, $menit, $detik);
+            return [
+                'totalSelisih' => $totalInterval,
+                'jam' => intval($jam),
+                'menit' => intval($menit),
+                'detik' => intval($menit),
+            ];
+        }
+    }
+    
     function index() {
         if ($this->session->logged_in) {
             if($this->session->sess != 'pegawai') {
                 redirect('dashboard');
             }
         }
-
+        
+        
         $data = [
             'main_content' => 'v_status',
             'page_title' => 'Status',
@@ -27,10 +42,10 @@ class Status extends MX_Controller
             'scripts' => ['status.js'],
             // 'styles' => ['wizard.css']
         ];
-
+        
         $this->load->view('user_template/template', $data);
     }
-
+    
     public function dt_statusTicket() {
         if (!$this->input->is_ajax_request()) show_404();
 
@@ -126,9 +141,6 @@ class Status extends MX_Controller
             'dataAttachment' => $dataAttachment->result_array(),
             'ticketChat' => $ticketChat->result_array(),
         ];
-
-        // var_export($data['sapa']);
-        // die;
 
         if ($ticketId != '') {
             if($checkTicket->num_rows() > 0) {
@@ -248,15 +260,7 @@ class Status extends MX_Controller
 
     function storeTicketChat() {
         if (!$this->input->is_ajax_request()) show_404();
-        // $val = $this->form_validation;
-        // $rules = [
-        //     'field' => 'masalah',
-        //     'label' => 'Deskripsi Masalah',
-        //     'rules' => 'trim|required'
-        // ];
-        // $this->function->alert($val);
-        // $val->set_rules($rules);
-        // var_export($val->run());
+        
         $data = [
             'role_id' => intval($this->session->userdata['role_id']),
             'ticket_id' => $this->input->post('ticket_id'),
@@ -268,16 +272,10 @@ class Status extends MX_Controller
             var_export('Tidak Ada Pesan!');
         }elseif ($data['role_id']==null||$data['ticket_id']==null||$data['pegawai_id']==null||$data['tanggal']==null) {
             var_export('Terjadi Kesalahan!');
+        }elseif ($this->input->post('status_ticket') == 4){
+            var_export('Tiket telah ditutup');
         }else{
             $this->mdl->save('ticket_chat', $data);
         }
-        // die;
-        // $ticket_chat_id = $this->mdl->save('ticket_chat', $data);
-        // var_export($ticket_chat_id);
-        // if($ticket_chat_id){
-        //     echo "sukses";
-        // }else{
-        //     echo "gagal";
-        // }
     }
 }

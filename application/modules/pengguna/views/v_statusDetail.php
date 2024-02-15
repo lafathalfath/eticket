@@ -104,14 +104,21 @@
 
                                 <!-- chat -->
                                 <div class="w-100 p-1 bg-dark rounded-lg">
-                                    <div class="bg-dark" id="chat-box" style="max-height: 25vh; overflow-x: hidden; overflow-y: scroll;">
+                                    <div class="bg-dark" id="chat-box" style="max-height: 75vh; overflow-x: hidden; overflow-y: scroll;">
                                         <?php foreach($ticketChat as $ticketChat) : ?>
                                             <div class="m-0 px-2 py-1 d-flex flex-row align-items-center 
                                                 <?php if ($ticketChat['pegawai_id'] == $this->session->id) echo 'justify-content-end'; else echo 'justify-content-start'; ?>
                                             ">
-                                                <p class="px-2 py-1 w-fit" style="
-                                                    <?php if ($ticketChat['pegawai_id'] == $this->session->id) echo 'border-radius: 10px 10px 0 10px; background-color: white'; else echo 'border-radius: 10px 10px 10px 0; background-color: #17A2B8; color: white'; ?>
-                                                "><?= $ticketChat['pesan']?></p>
+                                                <div class="px-2 py-1 w-fit d-flex flex-column" style="
+                                                    <?php if ($ticketChat['pegawai_id'] == $this->session->id) echo '
+                                                        border-radius: 10px 10px 0 10px; background-color: #17A2B8; color: white; max-width: 75%; align-items: end;
+                                                    '; else echo '
+                                                        border-radius: 10px 10px 10px 0; background-color: white; max-width: 75%;
+                                                    '; ?>
+                                                ">
+                                                    <?= $ticketChat['pesan']?>
+                                                    <div style="opacity: 0.5;font-size: 12px;"><?= substr($ticketChat['tanggal'], -9, -3) ?></div>
+                                                </div>
                                             </div>
                                         <?php endforeach; ?>
                                     </div>
@@ -119,6 +126,7 @@
                                         <?php if($statusTicket['status_id']!=4):?>
                                             <form class="w-100 h-max rounded-lg bg-white d-flex flex-row align-items-center justify-content-center" method="post" id="chat-form">
                                                 <input id="ticket-id" type="text" class="d-none" name="ticket_id" value="<?= $dataTicket['ticket'] ?>">
+                                                <input id="status-ticket" type="text" class="d-none" name="status_id" value="<?= $statusTicket['status_id'] ?>">
                                                 <input id="chat-pesan" type="text" name="pesan" class="chat-input px-1 w-100 h-100 rounded-lg" style="border: none" placeholder="Tulis pesan ...">
                                                 <button type="submit" class="m-1 btn px-3 py-1 bg-info text-light">send</button>
                                             </form>
