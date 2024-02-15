@@ -109,9 +109,9 @@ class Taskmanagement extends MX_Controller
     public function get_arahkan() {
         if (!$this->input->is_ajax_request()) show_404();
 
-        $id         = decode(trim($this->input->post('id', true)));
+        $id = decode(trim($this->input->post('id', true)));
 
-        $cek        = $this->db->select(
+        $cek = $this->db->select(
             't.id as id,
             p.name as nama,
             t.judul as judul,
@@ -138,7 +138,7 @@ class Taskmanagement extends MX_Controller
     public function arahkan() {
       if (!$this->input->is_ajax_request()) show_404();
 
-      $id         = decode(trim($this->input->post('id', true)));
+      $id = decode(trim($this->input->post('id', true)));
 
       $this->db->select('id');
         $this->db->from('ticket');
@@ -148,7 +148,7 @@ class Taskmanagement extends MX_Controller
         if($query->num_rows()) {
             $new = $query->result_array();
 
-            $row= array('ticket_id'=>$ticket_id);
+            // $row= array('ticket_id'=>$ticket_id);
             foreach ($new as $row) {
                 $this->db->insert("tr_ticket", $row);
             }
@@ -173,7 +173,8 @@ class Taskmanagement extends MX_Controller
         ];
 
         $dataTicket = [
-            'status_id' => '2'
+            'status_id' => '2',
+            'modified_at' => date('Y-m-d H:i:s'),
         ];
 
         // Cek Tabel Tr
