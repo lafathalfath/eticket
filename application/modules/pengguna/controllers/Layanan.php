@@ -33,7 +33,6 @@ class Layanan extends MX_Controller
             'dataLayanan' => $getLayanan
         ];
 
-        var_dump('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP');
         $this->load->view('wizard/w_klasifikasiLayanan', $data);
     }
 
@@ -54,7 +53,6 @@ class Layanan extends MX_Controller
             'wizard' => 'kategori layanan',
             'klasifikasiId' => $klasifikasiId
         ];
-        var_dump('QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ');
 
         if ($getKategoriLayanan->num_rows() > 0) {
             $this->load->view('wizard/w_kategoriLayanan', $data);
@@ -81,7 +79,6 @@ class Layanan extends MX_Controller
             'wizard' => 'jenis layanan',
             'kategoriLayanan' => $getKategoriLayanan
         ];
-        var_dump('RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR');
 
         if ($getJenisLayanan->num_rows() > 0) {
             $this->load->view('wizard/w_jenisLayanan', $data);
@@ -121,7 +118,6 @@ class Layanan extends MX_Controller
         ];
 
         // echo "<pre>";print_r($data);die;
-        var_dump('SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
 
         $this->load->view('form/request/' . $data['data']['kode_form'], $data);
     }
@@ -161,8 +157,8 @@ class Layanan extends MX_Controller
             'faq' => $check->result_array(),
             'wizard' => 'FAQ'
         ];
-
-        // var_dump('formformformformformformformform');
+        
+        // var_dump('lzkjclkvzjhzcklx;znjcbxknl');
 
         if ($check->num_rows() > 0) {
             $this->load->view('wizard/w_faq', $data);

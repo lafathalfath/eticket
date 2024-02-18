@@ -11,6 +11,30 @@ class Listlaporan extends MX_Controller
         $this->load->library('datatables');
 
         date_default_timezone_set('Asia/Jakarta');
+
+		function selisihWaktu($mulai, $akhir) {
+            $interval = strtotime($akhir) - strtotime($mulai);
+            $jam = floor($interval / 3600);
+            $menit = floor(($interval % 3600) / 60);
+            $detik = $interval % 60;
+            $totalInterval = sprintf('%02d:%02d:%02d', $jam, $menit, $detik);
+            return [
+                'totalSelisih' => $totalInterval,
+                'jam' => intval($jam),
+                'menit' => intval($menit),
+                'detik' => intval($menit),
+            ];
+        }
+
+        function selisihHari($mulai, $akhir){
+            $waktu1_str = date_create(substr($mulai, 0, 10));
+            $waktu2_str = date_create(substr($akhir, 0, 10));
+            $waktu1 = new DateTime(date_format($waktu1_str, 'Y-m-d H:i:s'));
+            $waktu2 = new DateTime(date_format($waktu2_str, 'Y-m-d H:i:s'));
+
+            $interval = $waktu1->diff($waktu2);
+            return $interval->days;
+        }
     }
 
     function index()

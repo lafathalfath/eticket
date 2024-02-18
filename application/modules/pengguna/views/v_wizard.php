@@ -9,7 +9,7 @@
             </div>
 
             <div class="row justify-content-center mt-4">
-                <button class="btn btn-secondary" id="backward"><i class="fas fa-arrow-circle-left"></i> Sebelumnya lmxcplvz </button>
+                <button class="btn btn-secondary" id="backward"><i class="fas fa-arrow-circle-left"></i> Sebelumnya </button>
                 <input type="hidden" id="counter">
             </div>
             
