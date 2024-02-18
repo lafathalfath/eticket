@@ -24,6 +24,16 @@ class Status extends MX_Controller
                 'detik' => intval($menit),
             ];
         }
+
+        function selisihHari($mulai, $akhir){
+            $waktu1_str = date_create(substr($mulai, 0, 10));
+            $waktu2_str = date_create(substr($akhir, 0, 10));
+            $waktu1 = new DateTime(date_format($waktu1_str, 'Y-m-d H:i:s'));
+            $waktu2 = new DateTime(date_format($waktu2_str, 'Y-m-d H:i:s'));
+
+            $interval = $waktu1->diff($waktu2);
+            return $interval->days;
+        }
     }
     
     function index() {

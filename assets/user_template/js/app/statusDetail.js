@@ -108,5 +108,5 @@ $(document).ready(function () {
 			}
 		})
 	})
-	$('#chat-box').scrollTop($('#chat-box').scrollHeight)
+	
 });
