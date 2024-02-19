@@ -88,6 +88,12 @@ $(document).ready(function () {
 				data: "lama_pengerjaan",
 				name: "lama_pengerjaan",
 				class: "text-center",
+				render: data=>{
+					if (data==null) {
+						return `<div>-</div>`
+					}
+					return `<div>${data}</div>`
+				}
 			},
 			{
 				data: "aksi",
