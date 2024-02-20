@@ -44,6 +44,8 @@ class Listlaporan extends MX_Controller
             'main_content' => 'listlaporan/index',
             'personil'=>$this->db->get_where('personil',['id'=>$this->session->id])->row_array()
         ];
+		// var_export($data['personil']);
+		// die;
 
         // Get Back Template
         $this->load->view('back_template/template', $data);
@@ -311,7 +313,7 @@ class Listlaporan extends MX_Controller
 		$id         = decode($this->input->post('id'));
 
 		$cek        = $this->db
-			->select('t.*, p.name')
+			->select('t.*, p.name, p.nomor_telepon')
 			->join('ticket t', 't.id = tr.ticket_id', 'LEFT')
 			->join('pegawai p', 't.pegawai_id = p.id')
 			->get_where('tr_ticket tr', ['tr.id' => $id]);
