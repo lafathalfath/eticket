@@ -84,6 +84,9 @@ class Status extends MX_Controller
     }
 
     function detail() {
+        // $insiden = $this->mdl->getWhere('ticket', ['title'=>'Insiden Keamanan Informasi']);
+        // var_export($insiden->row_array()['title']);
+        // die;
         $ticketId = $this->input->get('ticketId');
         if (strlen($ticketId) == 43) {
             $ticketId = decode($ticketId);
@@ -182,7 +185,14 @@ class Status extends MX_Controller
 	
 		if ($check->num_rows() > 0) {
 			$ticket = $check->row();
-			$data['lama_pengerjaan'] = selisihWaktu($ticket->created_at, date('Y-m-d H:i:s'))['totalSelisih'];
+            // $insiden = $this->mdl->getWhere('ticket', ['title'=>'Insiden Keamanan Informasi']);
+            // var_export($insiden->row_array()['title']);
+            // die;
+            if ($ticket->title == 'Insiden Keamanan Informasi') {
+                $data['lama_pengerjaan'] = selisihWaktu($ticket->created_at, date('Y-m-d H:i:s'))['totalSelisih'];
+            }else {
+                $data['lama_pengerjaan'] = null;
+            }
 		}
 	
 		$result = [
