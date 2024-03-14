@@ -206,9 +206,21 @@ class Listlaporan extends MX_Controller
 			->where('ticket_id', $ticketId)
 			->get()
 			->result_array();
-		$ticketStatus = $this->db
+		$ticket = $this->db
 			->get_where('ticket', ['id' => $ticketId])
-			->row_array()['status_id'];
+			->row_array();
+
+		$dataTicket = $this->db
+			->select("
+			t.id as ticket,
+			CONCAT('#', t.id) as kodeTicket, 
+			t.description,
+			t.title, (CASE WHEN tl.jenis_layanan_id IS NULL THEN 'Permintaan' ELSE 'Lapor' END) as jenisTicket
+			")
+			->from('ticket t')
+			->join('tr_layanan tl', 't.id = tl.ticket_id')
+			->where('t.id', $ticketId)
+			->where('t.pegawai_id', $this->session->id)->get();
 
         // Content ( Folder => Files)
         $data = [
@@ -219,9 +231,9 @@ class Listlaporan extends MX_Controller
 			'trJawaban' => $this->mdl->findAnswer($trTicketId),
 			'ticketId' => $ticketId,
 			'ticketChat' => $ticketChat,
-			'ticketStatus' => $ticketStatus,
+			'ticketStatus' => $ticket['status_id'],
+			'dataTicket' => $dataTicket->row_array(),
 		];
-		
         // Get Back Template
         $this->load->view('back_template/template', $data);
     }
@@ -330,5 +342,4 @@ class Listlaporan extends MX_Controller
 		header('Content-Type: application/json');
 		echo json_encode($result);
 	}
-
 }

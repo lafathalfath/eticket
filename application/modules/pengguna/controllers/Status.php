@@ -185,9 +185,6 @@ class Status extends MX_Controller
 	
 		if ($check->num_rows() > 0) {
 			$ticket = $check->row();
-            // $insiden = $this->mdl->getWhere('ticket', ['title'=>'Insiden Keamanan Informasi']);
-            // var_export($insiden->row_array()['title']);
-            // die;
             if ($ticket->title == 'Insiden Keamanan Informasi') {
                 $data['lama_pengerjaan'] = selisihWaktu($ticket->created_at, date('Y-m-d H:i:s'))['totalSelisih'];
             }else {
