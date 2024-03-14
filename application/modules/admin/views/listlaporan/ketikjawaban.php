@@ -38,7 +38,13 @@
 
      <section id="ketikjawaban" class="ketikjawaban">
          <div class="container">
-			 <?= $this->session->flashdata('message'); ?>
+			<?= $this->session->flashdata('message'); ?>
+
+			<?php if ($ticketStatus == 3) : ?>
+				<button class="btn btn-success mt-2 mb-2" id="btn-closed" data-ticket="<?= $ticketId ?>"
+				><i class="fas fa-ticket-alt"></i> Close Ticket</button>
+			<?php endif; ?>
+
 			<?php if (isset($trTicket)) : ?>
              <div class="form-group">
                  <label class="font-weight-bold" for="judul">Judul Ticket</label>
@@ -58,37 +64,35 @@
 				<?php endforeach; ?>
 			</div>  
              <hr>
-			 <?php if (is_null($trJawaban)) : ?>
-			 <?= form_open('listlaporan/ketikjawaban?ticketId='.encode($trTicket->id)); ?>
-                 <div class="form-group">
-                     <label for="deskjawaban">Tulis Jawaban Ticket</label>
-                     <textarea name="text" id="summernote" class="form-control"></textarea>
-					 <?= form_error('text', '<small class="text-danger pl-3">', '</small>'); ?>
-                 </div>
-                 <button type="submit" class="btn bg-success text-light">Submit</button>
-			 <?php else : ?>
-
-
-			 	<?php
+			<?php if (is_null($trJawaban)) : ?>
+			<?= form_open('listlaporan/ketikjawaban?ticketId='.encode($trTicket->id)); ?>
+				<div class="form-group">
+					<label for="deskjawaban">Tulis Jawaban Ticket</label>
+					<textarea name="text" id="summernote" class="form-control"></textarea>
+					<?= form_error('text', '<small class="text-danger pl-3">', '</small>'); ?>
+				</div>
+				<button type="submit" class="btn bg-success text-light">Submit</button>
+			<?php else : ?>
+				<?php
 				// KALO FAQNYA NULL TAMPILIN KETIKJAWABAN
 				if (is_null($trJawaban->faq_id)) :
 				?>
-				 <div class="form-group">
-					 <label for="deskjawaban">Jawaban Ticket</label><br>
-					 <?= html_entity_decode($trJawaban->jawab) ?>
-				 </div>
-				 <div class="form-group">
-					 <label for="judul">Waktu Jawab</label>
-					 <input type="text" class="form-control" value="<?= $trJawaban->waktu_jawab ?>" readonly>
-				 </div>
+					<div class="form-group">
+						<label for="deskjawaban">Jawaban Ticket</label><br>
+						<?= html_entity_decode($trJawaban->jawab) ?>
+					</div>
+					<div class="form-group">
+						<label for="judul">Waktu Jawab</label>
+						<input type="text" class="form-control" value="<?= $trJawaban->waktu_jawab ?>" readonly>
+					</div>
 				<?php else: ?>
 					<div class="form-group">
 						<label>Sudah terjawab di menu jawaban menggunakan template, klik <a href="<?= base_url('listlaporan/templatejawaban?ticketId='.encode($trTicket->id)) ?>">disini</a> untuk melihat jawban</label>
 					</div>
 				<?php endif; ?>
-			 <?php endif; ?>
-                 <a href="<?= base_url('listlaporan') ?>" class="btn btn-warning">Kembali</a>
-			 <?= form_close(); ?>
+			<?php endif; ?>
+			<a href="<?= base_url('listlaporan') ?>" class="btn btn-warning">Kembali</a>
+			<?= form_close(); ?>
 			<?php else: ?>
 				<div class="alert alert-danger text-center mt-4" role="alert">
 					Data Tiket Tidak Ditemukan
@@ -153,40 +157,82 @@
  </div>
 
  <script type="text/javascript">
-     $(document).ready(function() {
-         $('#summernote').summernote({
-			 toolbar: [
-				 ['font', ['bold', 'underline', 'clear']],
-				 ['fontname', ['fontname']],
-				 ['color', ['color']],
-				 ['para', ['ul', 'ol', 'paragraph']],
-				 ['table', ['table']],
-				 ['insert', ['link', 'picture', 'video']],
-				 ['view', ['fullscreen', 'help']],
-			 ],
+	$(document).ready(function() {
+		$('#summernote').summernote({
+			toolbar: [
+				['font', ['bold', 'underline', 'clear']],
+				['fontname', ['fontname']],
+				['color', ['color']],
+				['para', ['ul', 'ol', 'paragraph']],
+				['table', ['table']],
+				['insert', ['link', 'picture', 'video']],
+				['view', ['fullscreen', 'help']],
+			],
 
-		 });
-		 $('#chat-form').on('submit', e=>{
-			e.preventDefault()
-			const dataChat = {
-				pesan: $('#chat-pesan').val(),
-				ticket_id: $('#ticket-id').val(),
-				status_ticket: $('#status-ticket').val()
+		});
+		$('#chat-form').on('submit', e=>{
+		e.preventDefault()
+		const dataChat = {
+			pesan: $('#chat-pesan').val(),
+			ticket_id: $('#ticket-id').val(),
+			status_ticket: $('#status-ticket').val()
+		}
+		$.ajax({
+			type: 'POST',
+			url: base_url('/pengguna/status/storeTicketChat'),
+			data: dataChat,
+			success: res => {
+				console.log(res)
+				location.reload()
+			},
+			error: err => {
+				console.error(err)
 			}
-			$.ajax({
-				type: 'POST',
-				url: base_url('/pengguna/status/storeTicketChat'),
-				data: dataChat,
-				success: res => {
-					console.log(res)
-					location.reload()
-				},
-				error: err => {
-					console.error(err)
+		})
+		})
+
+		$("#btn-closed").click(function () {
+			Swal.fire({
+				icon: "question",
+				title: "Close Ticket",
+				text: "Apakah anda yakin akan menyelesaikan dan menutup ticket ini ?",
+				showCloseButton: true,
+				showCancelButton: true,
+			}).then((result) => {
+				if (result.value) {
+					var form = new FormData();
+					form.append("ticketId", $(this).data("ticket"));
+					// console.log(form);
+					save(form, base_url("pengguna/status/closed"))
+						.then(function (response) {
+							if (response.success) {
+								Swal.fire({
+									icon: "success",
+									title: "Sukses",
+									html: response.message,
+									showConfirmButton: false,
+									timer: 3000,
+								}).then(function () {
+									location.reload();
+								});
+							} else {
+								Swal.fire({
+									icon: "error",
+									title: "Gagal",
+									html: response.message,
+									showCloseButton: true,
+									howConfirmButton: false,
+								});
+							}
+							console.log(response.console_message);
+						})
+						.catch(function (err) {
+							console.log(err);
+						});
 				}
-			})
-		 })
-     });
+			});
+		});
+	});
 
 	 const chatBox = document.getElementById('chat-box')
 	 chatBox.scrollTo(0, chatBox.offsetHeight)
