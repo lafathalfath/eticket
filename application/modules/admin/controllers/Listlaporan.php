@@ -143,10 +143,21 @@ class Listlaporan extends MX_Controller
 			// Get Back Template
 			return $this->load->view('back_template/template', $data);
 		}
+		
+		// $statusId = $this->db
+		// ->select('t.status_id')
+		// ->from('ticket t')
+		// ->where('t.id', $ticketId)
+		// ->get()
+		// ->row_array()['status_id'];
+		// // var_export($statusId == 3 || $statusId == 4);
+		// // die;
+		
+		// if ($statusId != 3 || $statusId != 4) {
 
-    	if ($this->input->method() === 'post') :
+		if ($this->input->method() === 'post') :
 
-    		$validate = $this->form_validation;
+			$validate = $this->form_validation;
 			$rules = [
 				[
 					'field' => 'text',
@@ -161,16 +172,16 @@ class Listlaporan extends MX_Controller
 				$this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">'.
 					validation_errors().'</div>');
 
-		 	else :
+			else :
 
 				$this->db->trans_begin();
 				$dataJawaban = [
 					'jawab' => $this->input->post('text'),
 				];
-
+				
 				// SAVE MASTER JAWABAN
 				$jawabanId = $this->mdl->save('m_jawab', $dataJawaban, true);
-
+				
 				// SET ANSWERED DATA ON JAWABAN_ID
 				$dataTrJawaban = [
 					'tickettr_id' => $trTicketId,
@@ -197,8 +208,11 @@ class Listlaporan extends MX_Controller
 						Jawaban berhasil dibuat</div>');
 				endif;
 
+
 			endif;
 		endif;
+		
+		// }
 
 		$ticketChat = $this->db
 			->select('*')

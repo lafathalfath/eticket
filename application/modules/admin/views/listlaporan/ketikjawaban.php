@@ -141,7 +141,7 @@
 								<input id="ticket-id" type="text" name="ticket_id" value="<?=$ticketId?>" class="d-none">
 								<input id="status-ticket" type="text" name="status_id" value="<?= $ticketStatus ?>" class="d-none">
 								<input type="text" name="pesan" id="chat-pesan" placeholder="Tulis pesan ..." class="px-2 w-100 bg-transparent">
-								<button type="submit" class="m-1 px-2 py-1 btn bg-info">send</button>
+								<button type="submit" class="m-1 px-2 py-1 btn bg-info">Kirim</button>
 							</form>
 						<?php else: ?>
 							<div class="p-3 w-100 rounded-lg bg-success text-white d-flex align-items-center justify-content-center" style="font-size: 18px; cursor: not-allowed;">
@@ -171,24 +171,24 @@
 
 		});
 		$('#chat-form').on('submit', e=>{
-		e.preventDefault()
-		const dataChat = {
-			pesan: $('#chat-pesan').val(),
-			ticket_id: $('#ticket-id').val(),
-			status_ticket: $('#status-ticket').val()
-		}
-		$.ajax({
-			type: 'POST',
-			url: base_url('/pengguna/status/storeTicketChat'),
-			data: dataChat,
-			success: res => {
-				console.log(res)
-				location.reload()
-			},
-			error: err => {
-				console.error(err)
+			e.preventDefault()
+			const dataChat = {
+				pesan: $('#chat-pesan').val(),
+				ticket_id: $('#ticket-id').val(),
+				status_ticket: $('#status-ticket').val()
 			}
-		})
+			$.ajax({
+				type: 'POST',
+				url: base_url('/pengguna/status/storeTicketChat'),
+				data: dataChat,
+				success: res => {
+					console.log(res)
+					location.reload()
+				},
+				error: err => {
+					console.error(err)
+				}
+			})
 		})
 
 		$("#btn-closed").click(function () {

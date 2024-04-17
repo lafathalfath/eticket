@@ -144,7 +144,7 @@
                                                 <input id="ticket-id" type="text" class="d-none" name="ticket_id" value="<?= $dataTicket['ticket'] ?>">
                                                 <input id="status-ticket" type="text" class="d-none" name="status_id" value="<?= $statusTicket['status_id'] ?>">
                                                 <input id="chat-pesan" type="text" name="pesan" class="chat-input px-1 w-100 h-100 rounded-lg" style="border: none" placeholder="Tulis pesan ...">
-                                                <button type="submit" class="m-1 btn px-3 py-1 bg-info text-light">send</button>
+                                                <button type="submit" class="m-1 btn px-3 py-1 bg-info text-light">Kirim</button>
                                             </form>
                                         <?php else: ?>
                                             <div class="p-3 w-100 rounded-lg bg-success text-white d-flex align-items-center justify-content-center" style="font-size: 18px; cursor: not-allowed;">
