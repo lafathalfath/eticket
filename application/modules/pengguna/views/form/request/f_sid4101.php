@@ -34,7 +34,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                   <div class="form-group">
                       <label class="font-weight-bold" for="nama_aplikasi">Sistem Terdampak<span class="font-weight-bold text-danger">*</span></label>
-                      <input class="form-control" type="text" name="nama_barang" id="nama_barang" placeholder="Masukkan Nama Barang">
+                      <input class="form-control" type="text" name="nama_barang" id="nama_barang" placeholder="Masukkan Nama Sistem Terdampak">
                   </div>
                  
                 </div>
@@ -54,7 +54,7 @@
                 <div class="col-12">
                     <div class="text-right">
                         <input type="hidden" name="id_kategori_layanan" id="id_kategori_layanan" value="<?= $kategoriLayananId ?>">
-                        <button id="btn-submit" type="submit" style="width:180px" class="btn btn-primary"><i class="far fa-save"></i> Buat Request</button>
+                        <button id="btn-submit" type="submit" style="width:180px" class="btn btn-primary"><i class="far fa-save"></i>&ensp;Lapor Inseden</button>
                     </div>
                 </div>
             </div>
