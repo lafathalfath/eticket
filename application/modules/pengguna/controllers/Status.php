@@ -42,7 +42,14 @@ class Status extends MX_Controller
                 redirect('dashboard');
             }
         }
-        
+        // $judultiket = $this->db
+        //     ->select('t.title')
+        //     ->from('ticket t')            
+        //     ->where('t.pegawai_id', $this->session->id)
+        //     ->get();
+
+        // var_export($judultiket->result_array());
+        // die;
         
         $data = [
             'main_content' => 'v_status',
@@ -65,7 +72,12 @@ class Status extends MX_Controller
         $detail_button      = ($detail_priv == 1) ? '<a href="javascript:void(0)" data-id="$1" class="btn btn-success btn-sm detail"><i class="fas fa-info-circle"></i> Lihat</a>' : '';
         
         $this->datatables
-            ->select('t.id as kode, (CASE WHEN tl.jenis_layanan_id IS NULL THEN "Permintaan" ELSE "Lapor" END) as jenisTicket, CONCAT("#", t.id) as kodeTicket, t.title as judul, t.created_at as tgl, t.lama_pengerjaan as lama_pengerjaan, s.status, s.keterangan')
+            ->select('t.id as kode, (
+                CASE 
+                WHEN t.title = "Insiden Keamanan Informasi" THEN "Insiden" 
+                WHEN tl.jenis_layanan_id IS NULL THEN "Permintaan" 
+                ELSE "Lapor" END
+            ) as jenisTicket, CONCAT("#", t.id) as kodeTicket, t.title as judul, t.created_at as tgl, t.lama_pengerjaan as lama_pengerjaan, s.status, s.keterangan')
             ->from('ticket t')
             ->join('m_status s', 't.status_id = s.id')
             ->join('tr_layanan tl', 't.id = tl.ticket_id', 'left')            
