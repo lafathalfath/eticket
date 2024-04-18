@@ -102,7 +102,16 @@
                                 </div>
 
                                 <!-- chat -->
-                                <div class="w-100 p-1 bg-dark rounded-lg">
+                                <br>
+                                <h4 class="text-center">Tulis pesan untuk staff</h4>
+                                <div class="w-100 p-0 bg-dark rounded-lg">
+                                    <div class="px-4 py-2 w-100 text-white rounded-lg text-center d-flex align-items-center" style="gap: 10px; background-color: #5060b5;">
+                                        <i class='fas fa-user-circle' style="font-size: 200%;"></i>
+                                        <div style="font-weight: 600;"><?= $personil ?></div>
+                                    </div>
+                                    <?php if(!$ticketChat): ?>
+                                        <br>
+                                    <?php endif; ?>
                                     <div class="bg-dark" id="chat-box" style="max-height: 75vh; overflow-x: hidden; overflow-y: scroll;">
                                         <?php for($i = 0; $i < count($ticketChat); $i++) : ?>
 

@@ -100,9 +100,18 @@
 				<a href="<?= base_url('listlaporan') ?>" class="btn btn-warning">Kembali</a>
 			 <?php endif; ?>
 
-			 <!-- chat -->
-			 <div class="my-4 w-100 bg-dark rounded-lg">
-					<div class="w-100 p-2" id="chat-box">
+			<!-- chat -->
+			<br>
+			<h4 class="text-center">Tulis pesan untuk pelapor</h4>
+			<div class="my-4 w-100 bg-dark rounded-lg">
+				<div class="px-4 py-2 w-100 text-white rounded-lg text-center d-flex align-items-center" style="gap: 10px; background-color: #5060b5;">
+					<i class='fas fa-user-circle' style="font-size: 200%;"></i>
+					<div style="font-weight: 600;"><?= $pegawai['name'] ?></div>
+				</div>
+				<?php if(!$ticketChat): ?>
+					<br>
+				<?php endif; ?>
+				<div class="w-100 p-2" id="chat-box">
 					<?php for($i = 0; $i < count($ticketChat); $i++) : ?>
 						<?php 
 							$selisihHari = selisihHari($ticketChat[$i]['tanggal'], date('Y-m-d H:i:s')); 
@@ -134,23 +143,23 @@
 							</div>
 						</div>
 					<?php endfor; ?>
-					</div>
-					<div class="p-1 w-100 bg-dark rounded-lg">
-						<?php if($ticketStatus != 4): ?>
-							<form action="" method="post" id="chat-form" class="w-100 d-flex align-items-center justify-content-center bg-light rounded-lg">
-								<input id="ticket-id" type="text" name="ticket_id" value="<?=$ticketId?>" class="d-none">
-								<input id="status-ticket" type="text" name="status_id" value="<?= $ticketStatus ?>" class="d-none">
-								<input type="text" name="pesan" id="chat-pesan" placeholder="Tulis pesan ..." class="px-2 w-100 bg-transparent">
-								<button type="submit" class="m-1 px-2 py-1 btn bg-info">Kirim</button>
-							</form>
-						<?php else: ?>
-							<div class="p-3 w-100 rounded-lg bg-success text-white d-flex align-items-center justify-content-center" style="font-size: 18px; cursor: not-allowed;">
-								Tiket telah ditutup
-							</div>
-						<?php endif; ?>
-					</div>
-			 </div>
-			 <!-- end chat -->
+				</div>
+				<div class="p-1 w-100 bg-dark rounded-lg">
+					<?php if($ticketStatus != 4): ?>
+						<form action="" method="post" id="chat-form" class="w-100 d-flex align-items-center justify-content-center bg-light rounded-lg">
+							<input id="ticket-id" type="text" name="ticket_id" value="<?=$ticketId?>" class="d-none">
+							<input id="status-ticket" type="text" name="status_id" value="<?= $ticketStatus ?>" class="d-none">
+							<input type="text" name="pesan" id="chat-pesan" placeholder="Tulis pesan ..." class="px-2 w-100 bg-transparent">
+							<button type="submit" class="m-1 px-2 py-1 btn bg-info">Kirim</button>
+						</form>
+					<?php else: ?>
+						<div class="p-3 w-100 rounded-lg bg-success text-white d-flex align-items-center justify-content-center" style="font-size: 18px; cursor: not-allowed;">
+							Tiket telah ditutup
+						</div>
+					<?php endif; ?>
+				</div>
+			</div>
+			<!-- end chat -->
          </div>
      </section>
 
