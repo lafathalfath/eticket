@@ -220,8 +220,13 @@ class Listlaporan extends MX_Controller
 			->where('ticket_id', $ticketId)
 			->get()
 			->result_array();
+
 		$ticket = $this->db
 			->get_where('ticket', ['id' => $ticketId])
+			->row_array();
+
+		$pegawai = $this->db
+			->get_where('pegawai', ['id' => $ticket['pegawai_id']])
 			->row_array();
 
 		$dataTicket = $this->db
@@ -229,12 +234,27 @@ class Listlaporan extends MX_Controller
 			t.id as ticket,
 			CONCAT('#', t.id) as kodeTicket, 
 			t.description,
-			t.title, (CASE WHEN tl.jenis_layanan_id IS NULL THEN 'Permintaan' ELSE 'Lapor' END) as jenisTicket
+			t.title, (
+				CASE 
+				WHEN t.title = 'Insiden Keamanan Informasi' THEN 'Insiden' 
+				WHEN tl.jenis_layanan_id IS NULL THEN 'Permintaan'
+				ELSE 'Lapor' END
+			) as jenisTicket
 			")
 			->from('ticket t')
 			->join('tr_layanan tl', 't.id = tl.ticket_id')
 			->where('t.id', $ticketId)
 			->where('t.pegawai_id', $this->session->id)->get();
+
+		// $waktu_pengerjaan_kumulatif = $this->db
+		// 	->select('id, created_at, lama_pengerjaan')
+		// 	->from('ticket')
+		// 	->like('created_at', '2024')
+		// 	->where('lama_pengerjaan IS NOT NULL')
+		// 	->get()
+		// 	->row_array();
+		// var_export(strtotime($waktu_pengerjaan_kumulatif['lama_pengerjaan']));
+		// die;
 
         // Content ( Folder => Files)
         $data = [
@@ -247,6 +267,7 @@ class Listlaporan extends MX_Controller
 			'ticketChat' => $ticketChat,
 			'ticketStatus' => $ticket['status_id'],
 			'dataTicket' => $dataTicket->row_array(),
+			'pegawai' => $pegawai,
 		];
         // Get Back Template
         $this->load->view('back_template/template', $data);
