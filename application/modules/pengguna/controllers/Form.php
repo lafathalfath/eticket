@@ -1102,6 +1102,7 @@ class Form extends MX_Controller
         $merk_produk   = $this->input->post('merk_produk');
         $nomor_seri   = $this->input->post('nomor_seri');
         $keterangan   = $this->input->post('keterangan');
+        $pdf_file   = $this->input->post('pdf_file');
 
         $this->load->library('form_validation');
 
@@ -1139,12 +1140,39 @@ class Form extends MX_Controller
         } else {
             $this->db->trans_begin();
 
+			$this->load->library('upload');
+
+			// Konfigurasi upload file
+			$config['upload_path'] = './assets/upload/ticket_attachment/'; // Lokasi penyimpanan file di server
+			$config['allowed_types'] = 'pdf'; // Tipe file yang diizinkan (dalam hal ini hanya PDF)
+			$config['max_size'] = 2048; // Ukuran maksimum file (dalam kilobita)
+			$config['file_name'] = uniqid() . '_' . $_FILES['pdf_file']['name']; // Nama file unik
+
+			$this->upload->initialize($config);
+
+			// Lakukan proses upload file
+			if ($this->upload->do_upload('pdf_file')) {
+				$upload_data = $this->upload->data();
+				$pdf_file = $upload_data['file_name']; // Simpan nama file yang diunggah
+			} else {
+				$result = [
+					'success' => false,
+					'message' => $this->upload->display_errors()
+				];
+				// Kembalikan response jika upload gagal
+				return $this->output
+					->set_content_type('application/json')
+					->set_status_header(400)
+					->set_output(json_encode($result));
+			}
+
             $data = [
                 'nama_barang' => $nama_barang,
                 'merk_produk' => $merk_produk,
                 'nomor_seri' => $nomor_seri,
                 'keterangan' => $keterangan,
-                'ticket_id' => $idTicket
+                'ticket_id' => $idTicket,
+                'pdf_file' => $pdf_file
             ];
 
             $dataTicket = [

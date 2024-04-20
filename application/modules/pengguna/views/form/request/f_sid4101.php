@@ -32,11 +32,15 @@
             <hr>
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                  <div class="form-group">
-                      <label class="font-weight-bold" for="nama_aplikasi">Sistem Terdampak<span class="font-weight-bold text-danger">*</span></label>
-                      <input class="form-control" type="text" name="nama_barang" id="nama_barang" placeholder="Masukkan Nama Sistem Terdampak">
-                  </div>
-                 
+					<div class="form-group">
+						<label class="font-weight-bold" for="nama_aplikasi">Sistem Terdampak<span class="font-weight-bold text-danger">*</span></label>
+						<input class="form-control" type="text" name="nama_barang" id="nama_barang" placeholder="Masukkan Nama Sistem Terdampak">
+					</div>
+					<div class="form-group">
+						<label class="font-weight-bold" for="pdf_file">File PDF<span class="font-weight-bold text-danger">*</span></label>
+						<input class="form-control" type="file" name="pdf_file" id="pdf_file" accept="application/pdf">
+						<label style="font-size: small;">File .pdf berisikan bukti insiden</label>
+					</div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                     <div class="form-group">
