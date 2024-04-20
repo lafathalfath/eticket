@@ -24,6 +24,16 @@ class Status extends MX_Controller
                 'detik' => intval($menit),
             ];
         }
+
+        function selisihHari($mulai, $akhir){
+            $waktu1_str = date_create(substr($mulai, 0, 10));
+            $waktu2_str = date_create(substr($akhir, 0, 10));
+            $waktu1 = new DateTime(date_format($waktu1_str, 'Y-m-d H:i:s'));
+            $waktu2 = new DateTime(date_format($waktu2_str, 'Y-m-d H:i:s'));
+
+            $interval = $waktu1->diff($waktu2);
+            return $interval->days;
+        }
     }
     
     function index() {
@@ -32,7 +42,14 @@ class Status extends MX_Controller
                 redirect('dashboard');
             }
         }
-        
+        // $judultiket = $this->db
+        //     ->select('t.title')
+        //     ->from('ticket t')            
+        //     ->where('t.pegawai_id', $this->session->id)
+        //     ->get();
+
+        // var_export($judultiket->result_array());
+        // die;
         
         $data = [
             'main_content' => 'v_status',
@@ -55,7 +72,12 @@ class Status extends MX_Controller
         $detail_button      = ($detail_priv == 1) ? '<a href="javascript:void(0)" data-id="$1" class="btn btn-success btn-sm detail"><i class="fas fa-info-circle"></i> Lihat</a>' : '';
         
         $this->datatables
-            ->select('t.id as kode, (CASE WHEN tl.jenis_layanan_id IS NULL THEN "Permintaan" ELSE "Lapor" END) as jenisTicket, CONCAT("#", t.id) as kodeTicket, t.title as judul, t.created_at as tgl, t.lama_pengerjaan as lama_pengerjaan, s.status, s.keterangan')
+            ->select('t.id as kode, (
+                CASE 
+                WHEN t.title = "Insiden Keamanan Informasi" THEN "Insiden" 
+                WHEN tl.jenis_layanan_id IS NULL THEN "Permintaan" 
+                ELSE "Lapor" END
+            ) as jenisTicket, CONCAT("#", t.id) as kodeTicket, t.title as judul, t.created_at as tgl, t.lama_pengerjaan as lama_pengerjaan, s.status, s.keterangan')
             ->from('ticket t')
             ->join('m_status s', 't.status_id = s.id')
             ->join('tr_layanan tl', 't.id = tl.ticket_id', 'left')            
@@ -74,6 +96,9 @@ class Status extends MX_Controller
     }
 
     function detail() {
+        // $insiden = $this->mdl->getWhere('ticket', ['title'=>'Insiden Keamanan Informasi']);
+        // var_export($insiden->row_array()['title']);
+        // die;
         $ticketId = $this->input->get('ticketId');
         if (strlen($ticketId) == 43) {
             $ticketId = decode($ticketId);
@@ -86,7 +111,12 @@ class Status extends MX_Controller
         t.id as ticket,
         CONCAT('#', t.id) as kodeTicket, 
         t.description,
-        t.title, (CASE WHEN tl.jenis_layanan_id IS NULL THEN 'Permintaan' ELSE 'Lapor' END) as jenisTicket
+        t.title, (
+            CASE 
+            WHEN t.title = 'Insiden Keamanan Informasi' THEN 'Insiden' 
+            WHEN tl.jenis_layanan_id IS NULL THEN 'Permintaan'
+            ELSE 'Lapor' END
+        ) as jenisTicket
         ")
         ->from('ticket t')
         ->join('tr_layanan tl', 't.id = tl.ticket_id')
@@ -128,6 +158,14 @@ class Status extends MX_Controller
             
         $ticketChat = $this->db->get_where('ticket_chat', ['ticket_id'=>$ticketId]);
 
+        $personilId = $this->db
+            ->get_where('tr_ticket', ['ticket_id' => $ticketId])
+            ->row_array()['personil_id'];
+            
+        $personil = $this->db
+            ->get_where('personil', ['id' => $personilId])
+            ->row_array()['nama'];
+            
         $data = [
             'main_content' => 'v_statusDetail',
             'page_title' => 'Status Detail',
@@ -140,6 +178,7 @@ class Status extends MX_Controller
             'dataResponse' => $dataResponse->row_array(),
             'dataAttachment' => $dataAttachment->result_array(),
             'ticketChat' => $ticketChat->result_array(),
+            'personil' => $personil,
         ];
 
         if ($ticketId != '') {
@@ -172,7 +211,11 @@ class Status extends MX_Controller
 	
 		if ($check->num_rows() > 0) {
 			$ticket = $check->row();
-			$data['lama_pengerjaan'] = selisihWaktu($ticket->created_at, date('Y-m-d H:i:s'))['totalSelisih'];
+            if ($ticket->title == 'Insiden Keamanan Informasi') {
+                $data['lama_pengerjaan'] = selisihWaktu($ticket->created_at, date('Y-m-d H:i:s'))['totalSelisih'];
+            }else {
+                $data['lama_pengerjaan'] = null;
+            }
 		}
 	
 		$result = [

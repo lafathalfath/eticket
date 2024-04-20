@@ -17,6 +17,7 @@ $(document).ready(function () {
 			if (result.value) {
 				var form = new FormData();
 				form.append("ticketId", $(this).data("ticket"));
+				// console.log(form);
 				save(form, base_url("pengguna/status/closed"))
 					.then(function (response) {
 						if (response.success) {
@@ -108,5 +109,5 @@ $(document).ready(function () {
 			}
 		})
 	})
-	$('#chat-box').scrollTop($('#chat-box').scrollHeight)
+	
 });

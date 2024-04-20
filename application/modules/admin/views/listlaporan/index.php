@@ -67,6 +67,12 @@
 										 </div>
 									 </div>
 									 <div class="form-group row">
+										 <label class="col-form-label font-weight-bold col-lg-2">Nomor Telepon :</label>
+										 <div class="col-lg-10">
+											 <input type="text" name="telp" id="telp" class="form-control" required="" disabled>
+										 </div>
+									 </div>
+									 <div class="form-group row">
 										 <label class="col-form-label font-weight-bold col-lg-2">Tanggal Ticket :</label>
 										 <div class="col-lg-10">
 											 <input type="text" name="tanggal_tiket" id="tanggal_tiket" class="form-control" required="" disabled>
@@ -222,6 +228,7 @@
 			 $('#nama').val(r.name)
 			 $('.masalah').html(r.description)
 			 $('#tanggal_tiket').val(r.created_at)
+            $('#telp').val(r.nomor_telepon)
 		}
 
         $('#tbl-list')

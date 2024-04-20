@@ -11,6 +11,30 @@ class Listlaporan extends MX_Controller
         $this->load->library('datatables');
 
         date_default_timezone_set('Asia/Jakarta');
+
+		function selisihWaktu($mulai, $akhir) {
+            $interval = strtotime($akhir) - strtotime($mulai);
+            $jam = floor($interval / 3600);
+            $menit = floor(($interval % 3600) / 60);
+            $detik = $interval % 60;
+            $totalInterval = sprintf('%02d:%02d:%02d', $jam, $menit, $detik);
+            return [
+                'totalSelisih' => $totalInterval,
+                'jam' => intval($jam),
+                'menit' => intval($menit),
+                'detik' => intval($menit),
+            ];
+        }
+
+        function selisihHari($mulai, $akhir){
+            $waktu1_str = date_create(substr($mulai, 0, 10));
+            $waktu2_str = date_create(substr($akhir, 0, 10));
+            $waktu1 = new DateTime(date_format($waktu1_str, 'Y-m-d H:i:s'));
+            $waktu2 = new DateTime(date_format($waktu2_str, 'Y-m-d H:i:s'));
+
+            $interval = $waktu1->diff($waktu2);
+            return $interval->days;
+        }
     }
 
     function index()
@@ -20,6 +44,8 @@ class Listlaporan extends MX_Controller
             'main_content' => 'listlaporan/index',
             'personil'=>$this->db->get_where('personil',['id'=>$this->session->id])->row_array()
         ];
+		// var_export($data['personil']);
+		// die;
 
         // Get Back Template
         $this->load->view('back_template/template', $data);
@@ -117,10 +143,21 @@ class Listlaporan extends MX_Controller
 			// Get Back Template
 			return $this->load->view('back_template/template', $data);
 		}
+		
+		// $statusId = $this->db
+		// ->select('t.status_id')
+		// ->from('ticket t')
+		// ->where('t.id', $ticketId)
+		// ->get()
+		// ->row_array()['status_id'];
+		// // var_export($statusId == 3 || $statusId == 4);
+		// // die;
+		
+		// if ($statusId != 3 || $statusId != 4) {
 
-    	if ($this->input->method() === 'post') :
+		if ($this->input->method() === 'post') :
 
-    		$validate = $this->form_validation;
+			$validate = $this->form_validation;
 			$rules = [
 				[
 					'field' => 'text',
@@ -135,16 +172,16 @@ class Listlaporan extends MX_Controller
 				$this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">'.
 					validation_errors().'</div>');
 
-		 	else :
+			else :
 
 				$this->db->trans_begin();
 				$dataJawaban = [
 					'jawab' => $this->input->post('text'),
 				];
-
+				
 				// SAVE MASTER JAWABAN
 				$jawabanId = $this->mdl->save('m_jawab', $dataJawaban, true);
-
+				
 				// SET ANSWERED DATA ON JAWABAN_ID
 				$dataTrJawaban = [
 					'tickettr_id' => $trTicketId,
@@ -171,8 +208,11 @@ class Listlaporan extends MX_Controller
 						Jawaban berhasil dibuat</div>');
 				endif;
 
+
 			endif;
 		endif;
+		
+		// }
 
 		$ticketChat = $this->db
 			->select('*')
@@ -180,9 +220,41 @@ class Listlaporan extends MX_Controller
 			->where('ticket_id', $ticketId)
 			->get()
 			->result_array();
-		$ticketStatus = $this->db
+
+		$ticket = $this->db
 			->get_where('ticket', ['id' => $ticketId])
-			->row_array()['status_id'];
+			->row_array();
+
+		$pegawai = $this->db
+			->get_where('pegawai', ['id' => $ticket['pegawai_id']])
+			->row_array();
+
+		$dataTicket = $this->db
+			->select("
+			t.id as ticket,
+			CONCAT('#', t.id) as kodeTicket, 
+			t.description,
+			t.title, (
+				CASE 
+				WHEN t.title = 'Insiden Keamanan Informasi' THEN 'Insiden' 
+				WHEN tl.jenis_layanan_id IS NULL THEN 'Permintaan'
+				ELSE 'Lapor' END
+			) as jenisTicket
+			")
+			->from('ticket t')
+			->join('tr_layanan tl', 't.id = tl.ticket_id')
+			->where('t.id', $ticketId)
+			->where('t.pegawai_id', $this->session->id)->get();
+
+		// $waktu_pengerjaan_kumulatif = $this->db
+		// 	->select('id, created_at, lama_pengerjaan')
+		// 	->from('ticket')
+		// 	->like('created_at', '2024')
+		// 	->where('lama_pengerjaan IS NOT NULL')
+		// 	->get()
+		// 	->row_array();
+		// var_export(strtotime($waktu_pengerjaan_kumulatif['lama_pengerjaan']));
+		// die;
 
         // Content ( Folder => Files)
         $data = [
@@ -193,9 +265,10 @@ class Listlaporan extends MX_Controller
 			'trJawaban' => $this->mdl->findAnswer($trTicketId),
 			'ticketId' => $ticketId,
 			'ticketChat' => $ticketChat,
-			'ticketStatus' => $ticketStatus,
+			'ticketStatus' => $ticket['status_id'],
+			'dataTicket' => $dataTicket->row_array(),
+			'pegawai' => $pegawai,
 		];
-		
         // Get Back Template
         $this->load->view('back_template/template', $data);
     }
@@ -287,7 +360,7 @@ class Listlaporan extends MX_Controller
 		$id         = decode($this->input->post('id'));
 
 		$cek        = $this->db
-			->select('t.*, p.name')
+			->select('t.*, p.name, p.nomor_telepon')
 			->join('ticket t', 't.id = tr.ticket_id', 'LEFT')
 			->join('pegawai p', 't.pegawai_id = p.id')
 			->get_where('tr_ticket tr', ['tr.id' => $id]);
@@ -304,5 +377,4 @@ class Listlaporan extends MX_Controller
 		header('Content-Type: application/json');
 		echo json_encode($result);
 	}
-
 }

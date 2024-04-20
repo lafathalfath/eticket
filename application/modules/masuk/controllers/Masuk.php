@@ -52,12 +52,21 @@ class Masuk extends MX_Controller {
             if($ldapbind = ldap_bind($ldapconn, $ldapuser, $ldappass)){
                     //Get Entries LDAP
                     $filter = "(sAMAccountName=$uid)";
-                    $attr = array("cn", "mail","l","userPrincipalName");    
+                    $attr = array("cn", "mail","l","userPrincipalName", "mobile");  
                     $result = ldap_search($ldapconn,$ldaptree,$filter, $attr) or die ("Error in search query: ".ldap_error($ldapconn));
                     $data = ldap_get_entries($ldapconn, $result);
                     //cek di DB
                     $cekdata = $this->m_auth->cek_user($uid);
                     if(!empty($cekdata)) :
+                        if($data[0]['mobile'][0] != null)
+                            {
+                                $no_hp = array(
+                                    'nomor_telepon' => $data[0]['mobile'][0],
+                                );
+                            
+                            $this->db->where('id', $cekdata['id']);
+                            $this->db->update('pegawai', $no_hp);
+                            }
                         for ($i=0; $i<$data["count"]; $i++) 
                             {
                                 $dataldap['id']         = $cekdata['id'];

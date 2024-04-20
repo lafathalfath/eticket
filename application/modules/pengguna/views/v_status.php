@@ -11,8 +11,8 @@
                         <tr>
                             <th>#</th>
                             <th>Kode Ticket</th>
-                            <th>Judul Ticket</th>
                             <th>Jenis Ticket</th>
+                            <th>Judul Ticket</th>
                             <th>Status</th>
                             <th>Tgl. Permohonan</th>
 							<th>Lama Pengerjaan</th>
