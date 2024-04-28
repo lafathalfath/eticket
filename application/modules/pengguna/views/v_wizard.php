@@ -49,8 +49,9 @@
                             <textarea id="masalah" name="masalah"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="attachment">Upload Attachment <small class="text-danger">(png/jpg/jpeg)</small></label>
-                            <input type="file" class="form-control" id="attachment" name="attachment" placeholder="Upload Attachment" multiple>
+                            <label for="attachment">Upload Attachment <small class="text-danger">(.pdf)</small></label>
+                            <input type="file" class="form-control" id="attachment" name="attachment" placeholder="Upload Attachment" accept="application/pdf" multiple>
+						<label style="font-size: small;">File .pdf berisikan bukti insiden</label>
                         </div>                      
                     </div>                    
                 </div>

@@ -1145,7 +1145,7 @@ class Form extends MX_Controller
 			// Konfigurasi upload file
 			$config['upload_path'] = './assets/upload/ticket_attachment/'; // Lokasi penyimpanan file di server
 			$config['allowed_types'] = 'pdf'; // Tipe file yang diizinkan (dalam hal ini hanya PDF)
-			$config['max_size'] = 2048; // Ukuran maksimum file (dalam kilobita)
+			$config['max_size'] = 5024; // Ukuran maksimum file (dalam kilobita)
 			$config['file_name'] = uniqid() . '_' . $_FILES['pdf_file']['name']; // Nama file unik
 
 			$this->upload->initialize($config);
